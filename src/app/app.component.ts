@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from './services/api/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,22 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'frontend';
+
+  sideBarOpen = true;
+  connected= true;
+  isAdmin= false;
+  constructor(private authservice: AuthService) { 
+    this.authservice.isConnected.subscribe(res=>{
+      this.connected= res;
+      this.isAdmin= this.authservice.user.role=="superadmin";
+    });
+    
+  }
+
+  ngOnInit() { }
+
+
+  sideBarToggler() {
+    this.sideBarOpen = !this.sideBarOpen;
+  }
 }
