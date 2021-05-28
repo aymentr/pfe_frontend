@@ -9,8 +9,11 @@ import { AuthService } from 'src/app/services/api/auth.service';
 export class HeaderComponent implements OnInit {
 
   @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
+  isAdmin: boolean;
 
-  constructor(private auth: AuthService) { }
+  constructor(private auth: AuthService) { 
+    this.isAdmin= this.auth.user.role=="superadmin";
+  }
 
   ngOnInit() { }
 

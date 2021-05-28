@@ -11,9 +11,16 @@ table {
     .mat-cell {
         cursor: pointer;
     }
+    .mat-icon-button {
+        vertical-align: baseline;
+    }
 }
 
 td,
 th {
     width: 25%;
+}
+
+li p {
+    margin-left: 10px;
 }

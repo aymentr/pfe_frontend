@@ -26,7 +26,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './components/dashboards/dashboard/dashboard.component';
 import { MachinesComponent } from './components/dashboards/machines/machines.component';
 import {MatDialogModule} from '@angular/material/dialog';
-import { UpdateMachineComponent } from './components/update-machine/update-machine.component';
+import { UpdateMachineComponent } from './components/dialogs/update-machine/update-machine.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { UpdateHistoryComponent } from './components/update-history/update-history.component';
+import { AddLineComponent } from './components/dialogs/add-line/add-line.component';
+import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
+import { UserDialogComponent } from './components/dialogs/user-dialog/user-dialog.component';
+import { AddMachineComponent } from './components/dialogs/add-machine/add-machine.component';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -37,7 +44,12 @@ import { UpdateMachineComponent } from './components/update-machine/update-machi
     SuperAdminDashboardComponent,
     DashboardComponent,
     MachinesComponent,
-    UpdateMachineComponent
+    UpdateMachineComponent,
+    UpdateHistoryComponent,
+    AddLineComponent,
+    ConfirmDialogComponent,
+    UserDialogComponent,
+    AddMachineComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +71,9 @@ import { UpdateMachineComponent } from './components/update-machine/update-machi
     MatTableModule,
     MatPaginatorModule,
     HttpClientModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule,
+    MatBadgeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

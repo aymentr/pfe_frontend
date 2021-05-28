@@ -12,4 +12,24 @@ export class LineService {
   getLines(){
     return this.http.get(this.baseUrl+'/list');
   }
+
+  getLine(id: string){
+    return this.http.get(this.baseUrl+'/line/'+id);
+  }
+
+  updateLine(id: string, line: any){
+    const token= localStorage.getItem('ACCESS_TOKEN');
+    return this.http.put(this.baseUrl+"/updateLine"+'/'+token+"/"+id, line);
+  }
+
+  addLine(line: any){
+    const token= localStorage.getItem('ACCESS_TOKEN');
+    return this.http.post(this.baseUrl+"/addLine"+'/'+token, line);
+  }
+
+
+  deleteLine(id: string){
+    const token= localStorage.getItem('ACCESS_TOKEN');
+    return this.http.delete(this.baseUrl+"/deleteLine"+'/'+token+"/"+id);
+  }
 }

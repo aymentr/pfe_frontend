@@ -1,9 +1,12 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
+import { AuthService } from 'src/app/services/api/auth.service';
 import { LineService } from 'src/app/services/api/line.service';
-
+import { AddLineComponent } from '../../dialogs/add-line/add-line.component';
+import * as io from 'socket.io-client';
 
 
 @Component({
@@ -18,20 +21,33 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(private lineSrv: LineService) { 
-    
+  isNotUser= false;
+  socket: any;
+  constructor(private lineSrv: LineService, private dialog: MatDialog, private auth: AuthService) { 
+    this.auth.getRole().subscribe((res: any)=>{
+      this.isNotUser= res.role !=="user";
+    });
+    this.socket= io.io('http://localhost:3000');
   }
 
 
   ngOnInit(): void {
+    this.getLines();
+    this.socket.on('line_added', ()=>{
+      this.getLines();
+    });
+    this.socket.on('line_deleted', ()=>{
+      this.getLines();
+    });
+  }
+
+  getLines(){
     this.lineSrv.getLines().subscribe((res: any)=>{
       this.dataSource = new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     })
   }
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -42,6 +58,9 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  openDialog(){
+    this.dialog.open(AddLineComponent);
+  }
 
 
 

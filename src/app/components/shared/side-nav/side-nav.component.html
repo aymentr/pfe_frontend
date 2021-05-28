@@ -2,7 +2,10 @@
 
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/dashboard">Dashboard</a>
 
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/users">Gestion utilisateurs</a>
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="/history">Notifications 
+        <div fxFlex fxLayout="row" fxLayoutAlign="flex-end"><span [matBadge]="newHistory" matBadgeColor="warn"  ></span></div></a>
+
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="/users">Users Management</a>
 
 
 </mat-nav-list>
