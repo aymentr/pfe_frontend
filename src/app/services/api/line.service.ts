@@ -17,10 +17,6 @@ export class LineService {
     return this.http.get(this.baseUrl+'/line/'+id);
   }
 
-  updateLine(id: string, line: any){
-    const token= localStorage.getItem('ACCESS_TOKEN');
-    return this.http.put(this.baseUrl+"/updateLine"+'/'+token+"/"+id, line);
-  }
 
   addLine(line: any){
     const token= localStorage.getItem('ACCESS_TOKEN');

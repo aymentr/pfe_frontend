@@ -5,6 +5,13 @@
         <app-side-nav></app-side-nav>
     </mat-drawer>
     <mat-drawer-content>
+        <div style="margin-bottom: 15px;">
+            <div fxLayout="row">
+                <button mat-mini-fab color="basic" routerLink="..">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+            </div>
+        </div>
         <router-outlet></router-outlet>
     </mat-drawer-content>
 </mat-drawer-container>

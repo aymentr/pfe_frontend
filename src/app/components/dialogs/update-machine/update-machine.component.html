@@ -11,20 +11,32 @@
             <mat-form-field>
                 <mat-label>Ressource</mat-label>
                 <input matInput formControlName="ressource">
+                <mat-error *ngIf="machineForm.controls['ressource'].hasError('required')">This is required.</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Machine Host</mat-label>
+                <input matInput formControlName="server">
+                <mat-error *ngIf="machineForm.controls['server'].hasError('required')">This is required.</mat-error>
+                <mat-error *ngIf="machineForm.controls['server'].hasError('pattern')">You have entered an invalid IP address.</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Operation</mat-label>
                 <input matInput formControlName="operation">
+                <mat-error *ngIf="machineForm.controls['operation'].hasError('required')">This is required.</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Designation</mat-label>
-                <input matInput formControlName="designation">
+                <mat-label>Mode Face Element/Sodure</mat-label>
+                <mat-select formControlName="mode">
+                    <mat-option value="true">True</mat-option>
+                    <mat-option value="false">False</mat-option>
+                </mat-select>
+                <mat-error *ngIf="machineForm.controls['mode'].hasError('required')">This is required.</mat-error>
             </mat-form-field>
         </form>
     </div>
     <div mat-dialog-actions>
         <button mat-button mat-dialog-close color="warn">Close</button>
-        <button mat-raised-button mat-dialog-close color="warn">Delete</button>
+        <button mat-raised-button mat-dialog-close color="warn" [disabled]="role!=='superadmin'" (click)="delete()">Delete</button>
         <button mat-raised-button mat-dialog-close color="primary" [disabled]="machineForm.invalid || !machineForm.dirty" (click)="save()">Update</button>
     </div>
 </div>

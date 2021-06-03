@@ -20,9 +20,10 @@ export class UpdateMachineComponent implements OnInit {
    private fb: FormBuilder, private machineSrv: MachineService, private _snackBar: MatSnackBar) { 
     this.role= this.auth.user.role;
     this.machineForm= this.fb.group({
-      ressource: [this.data.ressource, Validators.required],
+      ressource: [this.data._id, Validators.required],
+      server: [this.data.server, [Validators.required, Validators.pattern(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/)]],
       operation: [this.data.operation, Validators.required],
-      designation: [this.data.designation, Validators.required],
+      mode: [this.data.mode, Validators.required],
     });
   }
 
@@ -32,8 +33,8 @@ export class UpdateMachineComponent implements OnInit {
   save(){
     this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title: 'Update Line',
-        message: 'Are you sure, you want to update this Line?'
+        title: 'Update Machine',
+        message: 'Are you sure, you want to update this Machine?'
       }
     }).afterClosed().subscribe((confirm)=>{
       if(confirm){
@@ -44,9 +45,32 @@ export class UpdateMachineComponent implements OnInit {
     });
     
   }
+  
+  delete(){
+    this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Machine',
+        message: 'Are you sure, you want to delete this Machine?'
+      }
+    }).afterClosed().subscribe((confirm)=>{
+      if(confirm){
+        this.machineSrv.deleteMachine(this.data._id).subscribe((res:any)=>{
+          this.deleteSnackBar();
+        });
+      }
+    });
+  }
 
   openSnackBar() {
     this._snackBar.openFromComponent(MachineSnackbarComponent, {
+      duration: 6000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top'
+    });
+  }
+
+  deleteSnackBar(){
+    this._snackBar.openFromComponent(DeleteMachineSnackbarComponent, {
       duration: 6000,
       horizontalPosition: 'end',
       verticalPosition: 'top'
@@ -68,3 +92,17 @@ export class UpdateMachineComponent implements OnInit {
   `],
 })
 export class MachineSnackbarComponent {}
+
+@Component({
+  selector: 'snack-bar-component-machine-snack',
+  template: `<span><span class="material-icons done">
+  delete
+  </span> Machine deleted successfully</span>`,
+  styles: [`
+    .done {
+      color: #5cb85c;
+      vertical-align: middle;
+    }
+  `],
+})
+export class DeleteMachineSnackbarComponent {}

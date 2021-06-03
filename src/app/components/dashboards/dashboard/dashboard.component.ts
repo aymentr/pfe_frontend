@@ -16,16 +16,16 @@ import * as io from 'socket.io-client';
 })
 export class DashboardComponent implements OnInit {
 
-  displayedColumns: string[] = ['ressource', 'operation', 'designation'];
+  displayedColumns: string[] = ['name'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  isNotUser= false;
+  isSuperAdmin= false;
   socket: any;
   constructor(private lineSrv: LineService, private dialog: MatDialog, private auth: AuthService) { 
     this.auth.getRole().subscribe((res: any)=>{
-      this.isNotUser= res.role !=="user";
+      this.isSuperAdmin= res.role ==="superadmin";
     });
     this.socket= io.io('http://localhost:3000');
   }

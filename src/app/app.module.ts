@@ -34,6 +34,10 @@ import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/conf
 import { UserDialogComponent } from './components/dialogs/user-dialog/user-dialog.component';
 import { AddMachineComponent } from './components/dialogs/add-machine/add-machine.component';
 import {MatBadgeModule} from '@angular/material/badge';
+import { NgxSpinnerModule } from "ngx-spinner";
+import { NotFoundComponent } from './components/templates/not-found/not-found.component';
+import { UnauthorizedComponent } from './components/templates/unauthorized/unauthorized.component';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -49,7 +53,9 @@ import {MatBadgeModule} from '@angular/material/badge';
     AddLineComponent,
     ConfirmDialogComponent,
     UserDialogComponent,
-    AddMachineComponent
+    AddMachineComponent,
+    NotFoundComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +79,9 @@ import {MatBadgeModule} from '@angular/material/badge';
     HttpClientModule,
     MatDialogModule,
     MatSnackBarModule,
-    MatBadgeModule
+    MatBadgeModule,
+    NgxSpinnerModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

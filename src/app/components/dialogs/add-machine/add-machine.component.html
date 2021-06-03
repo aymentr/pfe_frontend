@@ -4,14 +4,27 @@
         <mat-form-field>
             <mat-label>Ressource</mat-label>
             <input matInput formControlName="ressource">
+            <mat-error *ngIf="machineForm.controls['ressource'].hasError('required')">This is required.</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Machine Host</mat-label>
+            <input matInput formControlName="server">
+            <mat-error *ngIf="machineForm.controls['server'].hasError('required')">This is required.</mat-error>
+            <mat-error *ngIf="machineForm.controls['server'].hasError('pattern')">You have entered an invalid IP address.</mat-error>
         </mat-form-field>
         <mat-form-field>
             <mat-label>Operation</mat-label>
             <input matInput formControlName="operation">
+            <mat-error *ngIf="machineForm.controls['operation'].hasError('required')">This is required.</mat-error>
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Designation</mat-label>
-            <input matInput formControlName="designation">
+            <mat-label>Mode Face Element/Sodure?</mat-label>
+            <mat-select formControlName="mode">
+                <mat-option>None</mat-option>
+                <mat-option value="true">True</mat-option>
+                <mat-option value="false">False</mat-option>
+            </mat-select>
+            <mat-error *ngIf="machineForm.controls['mode'].hasError('required')">This is required.</mat-error>
         </mat-form-field>
     </form>
 </div>

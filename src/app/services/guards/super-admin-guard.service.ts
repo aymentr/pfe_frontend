@@ -15,7 +15,7 @@ export class SuperAdminGuardService implements CanActivate {
         if(res.role=='superadmin'){
           resolve(true);
         }else{
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/unauthorized']);
           resolve(false);
         }
       })

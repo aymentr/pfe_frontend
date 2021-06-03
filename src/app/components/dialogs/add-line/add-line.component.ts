@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { LineService } from 'src/app/services/api/line.service';
 
 @Component({
@@ -14,9 +14,7 @@ export class AddLineComponent implements OnInit {
 
   constructor(private fb : FormBuilder, private lineSrv: LineService, private _snackBar: MatSnackBar) { 
     this.lineForm= this.fb.group({
-      ressource: ['', Validators.required],
-      operation: ['', Validators.required],
-      designation: ["", Validators.required],
+      name: ['', Validators.required],
     });
   }
 
@@ -26,6 +24,8 @@ export class AddLineComponent implements OnInit {
   save(){
     this.lineSrv.addLine(this.lineForm.value).subscribe((res:any)=>{
       this.openSnackBar();
+    }, (err)=>{
+      this.openErrorSnackBar(err.error.message);
     });
   }
 
@@ -34,6 +34,15 @@ export class AddLineComponent implements OnInit {
       duration: 6000,
       horizontalPosition: 'end',
       verticalPosition: 'top'
+    });
+  }
+
+  openErrorSnackBar(msg: string) {
+    this._snackBar.openFromComponent(LineErrorSnackbarComponent, {
+      duration: 6000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      data: msg
     });
   }
 
@@ -52,3 +61,20 @@ export class AddLineComponent implements OnInit {
   `],
 })
 class LineSnackbarComponent {}
+
+
+@Component({
+  selector: 'snack-bar-component-machine-snack',
+  template: `<span><span class="material-icons done">
+  warning 
+  </span> {{data}}</span>`,
+  styles: [`
+    .done {
+      color: #f0ad4e;
+      vertical-align: middle;
+    }
+  `],
+})
+class LineErrorSnackbarComponent {
+  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) { }
+}

@@ -3,12 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MachineService } from 'src/app/services/api/machine.service';
 import { UpdateMachineComponent } from '../../dialogs/update-machine/update-machine.component';
 import * as io from "socket.io-client";
 import { LineService } from 'src/app/services/api/line.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/api/auth.service';
 import { AddMachineComponent } from '../../dialogs/add-machine/add-machine.component';
@@ -21,23 +20,21 @@ import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dia
 })
 export class MachinesComponent implements OnInit {
 
-  displayedColumns: string[] = ['ressource', 'operation', 'designation'];
+  displayedColumns: string[] = ['ressource', 'operation', 'server', 'mode'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   id: string;
   socket: any;
-  line: any;
-  edit=false;
-  lineForm !: FormGroup;
-  isNotUser!: boolean;
-  constructor(private route: ActivatedRoute, private machine: MachineService, private fb: FormBuilder,
+  isSuperAdmin!: boolean;
+  notFound= false;
+  constructor(private route: ActivatedRoute, private machine: MachineService, private router: Router,
      private dialog: MatDialog, private lineSrv: LineService, private _snackBar: MatSnackBar, private auth: AuthService) { 
     this.id = this.route.snapshot.params.id;
     this.socket= io.io('ws://localhost:3000/');
     this.auth.getRole().subscribe((res: any)=>{
-      this.isNotUser= res.role !=="user";
+      this.isSuperAdmin= res.role ==="superadmin";
     });
   }
 
@@ -50,12 +47,17 @@ export class MachinesComponent implements OnInit {
     this.socket.on('machine_added', ()=>{
       this.getMachines();
     });
-    this.socket.on('line_updated', ()=>{
-      this.getLine();
+    this.socket.on('machine_deleted', ()=>{
+      this.getMachines();
     });
-    this.socket.on('line_deleted', ()=>{
-      this.getLine();
-    });
+  }
+
+  getLine(){
+    this.lineSrv.getLine(this.id).subscribe(res=>{
+      if(res==null){
+        this.notFound= true;
+      }
+    })
   }
 
   getMachines(){
@@ -63,17 +65,6 @@ export class MachinesComponent implements OnInit {
       this.dataSource = new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
-  }
-
-  getLine(){
-    this.lineSrv.getLine(this.id).subscribe((res:any)=>{
-      this.line= res;
-      this.lineForm= this.fb.group({
-        ressource: [res.ressource, Validators.required],
-        operation: [res.operation, Validators.required],
-        designation: [res.designation, Validators.required],
-      });
     });
   }
 
@@ -98,28 +89,6 @@ export class MachinesComponent implements OnInit {
     });
   }
 
-  resetForm(){
-    this.lineForm.controls['ressource'].setValue(this.line.ressource);
-    this.lineForm.controls['operation'].setValue(this.line.operation);
-    this.lineForm.controls['designation'].setValue(this.line.designation);
-    this.edit= false;
-  }
-
-  save(){
-    this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Update Line',
-        message: 'Are you sure, you want to update this Line?'
-      }
-    }).afterClosed().subscribe((confirm)=>{
-      if(confirm){
-        this.lineSrv.updateLine(this.id, this.lineForm.value).subscribe((res:any)=>{
-          this.openSnackBar();
-          this.edit= false;
-        });
-      }
-    });
-  }
 
   delete(){
     this.dialog.open(ConfirmDialogComponent, {
@@ -131,7 +100,7 @@ export class MachinesComponent implements OnInit {
       if(confirm){
         this.lineSrv.deleteLine(this.id).subscribe((res)=>{
           this.openDeleteSnackBar();
-          this.edit=false;
+          this.router.navigate([".."]);
         });
       }
     });
